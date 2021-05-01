@@ -23,11 +23,11 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Azure Container Registry'
         command: 'Build an image'
-        dockerFile: 'src/Dockerfile'
+        dockerFile: '**/Dockerfile'
         imageName: '$(ImageName)'
         includeLatestTag: true
         useDefaultContext: false
-        buildContext: '.'
+        buildContext: '**'
      
     - task: Docker@1
       displayName: 'Push the Docker image to Dockerhub'
