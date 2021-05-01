@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
   
 variables:
-  ImageName: 'vitsacr.azurecr.io/azure-devops-agent:$(Build.BuildId)'
+  ImageName: 'vitsacr.azurecr.io/azure-devops-agent'
   
 stages:
 - stage: Build
@@ -24,17 +24,25 @@ stages:
         dockerRegistryEndpoint: 'Azure Container Registry'
         command: 'Build an image'
         dockerFile: 'src/Dockerfile'
-        imageName: '$(ImageName)'
+        imageName: '$(ImageName):$(Build.BuildId)'
         includeLatestTag: true
         useDefaultContext: false
         buildContext: 'src'
      
-    - task: Docker@1
+    - task: Docker@2
+      displayName: Login to ACR
+      inputs:
+        command: login
+        containerRegistry: 'Azure Container Registry'
+
+    - task: Docker@2
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Azure Container Registry'
-        command: 'Push an image'
-        imageName: '$(ImageName)'
-        includeLatestTag: true
+        containerRegistry: 'Azure Container Registry'
+        command: 'push'
+        repository: azure-devops-agent
+        tags: |
+          $(Build.BuildId) 
+          latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
