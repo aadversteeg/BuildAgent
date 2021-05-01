@@ -23,7 +23,6 @@ stages:
         command: 'build'
         repository: azure-devops-agent
         tags: |
-          $(Build.BuildId) 
           latest 
      
     - task: Docker@2
@@ -39,7 +38,6 @@ stages:
         command: 'push'
         repository: azure-devops-agent
         tags: |
-          $(Build.BuildId) 
           latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
