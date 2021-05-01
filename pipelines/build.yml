@@ -21,6 +21,7 @@ stages:
       displayName: 'Build the Docker image'
       inputs:
         command: 'build'
+        containerRegistry: 'Azure Container Registry'
         Dockerfile: src/Dockerfile
         buildContext: src
         repository: azure-devops-agent
