@@ -24,7 +24,7 @@ stages:
         repository: azure-devops-agent
         tags: |
           $(Build.BuildId) 
-          latestaddDefaultLabels: 
+          latest 
      
     - task: Docker@2
       displayName: Login to Azure Container Registry
