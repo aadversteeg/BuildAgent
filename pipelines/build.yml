@@ -21,6 +21,8 @@ stages:
       displayName: 'Build the Docker image'
       inputs:
         command: 'build'
+        Dockerfile: src/Dockerfile
+        buildContext: src
         repository: azure-devops-agent
         tags: |
           $(Build.BuildId)
@@ -31,6 +33,7 @@ stages:
       inputs:
         command: login
         containerRegistry: 'Azure Container Registry'
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
     - task: Docker@2
       displayName: 'Push the Docker image to Dockerhub'
@@ -48,5 +51,6 @@ stages:
       inputs:
         command: logout
         containerRegistry: 'Azure Container Registry'
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 
