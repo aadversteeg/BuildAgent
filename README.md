@@ -8,3 +8,7 @@ To push the image make a service connection of type `Docker Registry` named `Azu
 
 
 
+##References
+
+[Run a self-hosted agent in Docker](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops)
+
