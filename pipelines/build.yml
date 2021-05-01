@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
   
 variables:
-  ImageName: 'vitsacr.azurecr.io/dockeragent:$(Build.BuildId)'
+  ImageName: 'vitsacr.azurecr.io/azure-devops-agent:$(Build.BuildId)'
   
 stages:
 - stage: Build
@@ -36,4 +36,5 @@ stages:
         dockerRegistryEndpoint: 'Azure Container Registry'
         command: 'Push an image'
         imageName: '$(ImageName)'
+        includeLatestTag: true
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
