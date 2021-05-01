@@ -5,10 +5,11 @@ trigger:
       
 pool:
   vmImage: 'ubuntu-latest'
-  
+
 variables:
-  ImageName: 'vitsacr.azurecr.io/azure-devops-agent'
-  
+  ContainerRegistry: Azure Container Registry
+  Repository: 'azure-devops-agent'
+
 stages:
 - stage: Build
   displayName: Build image
@@ -21,27 +22,27 @@ stages:
       displayName: 'Build the Docker image'
       inputs:
         command: 'build'
-        containerRegistry: 'Azure Container Registry'
+        containerRegistry: $(ContainerRegistry)
         Dockerfile: src/Dockerfile
         buildContext: src
-        repository: azure-devops-agent
+        repository: $(Repository)
         tags: |
           $(Build.BuildId)
           latest 
-     
+
     - task: Docker@2
       displayName: Login to Azure Container Registry
       inputs:
         command: login
-        containerRegistry: 'Azure Container Registry'
+        containerRegistry: $(ContainerRegistry)
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
     - task: Docker@2
       displayName: 'Push the Docker image to Dockerhub'
       inputs:
-        containerRegistry: 'Azure Container Registry'
+        containerRegistry: $(ContainerRegistry)
         command: 'push'
-        repository: azure-devops-agent
+        repository: $(Repository)
         tags: |
           $(Build.BuildId)
           latest
@@ -51,7 +52,7 @@ stages:
       displayName: Logout from Azure Container Registry
       inputs:
         command: logout
-        containerRegistry: 'Azure Container Registry'
+        containerRegistry: $(ContainerRegistry)
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
 
