@@ -16,21 +16,18 @@ stages:
   - job: Build
     displayName: Build and push Docker image
     steps:
-    
-    - task: Docker@1
+
+    - task: Docker@2
       displayName: 'Build the Docker image'
       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Azure Container Registry'
-        command: 'Build an image'
-        dockerFile: 'src/Dockerfile'
-        imageName: '$(ImageName):$(Build.BuildId)'
-        includeLatestTag: true
-        useDefaultContext: false
-        buildContext: 'src'
+        command: 'build'
+        repository: azure-devops-agent
+        tags: |
+          $(Build.BuildId) 
+          latestaddDefaultLabels: 
      
     - task: Docker@2
-      displayName: Login to ACR
+      displayName: Login to Azure Container Registry
       inputs:
         command: login
         containerRegistry: 'Azure Container Registry'
@@ -45,4 +42,11 @@ stages:
           $(Build.BuildId) 
           latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    - task: Docker@2
+      displayName: Logout from Azure Container Registry
+      inputs:
+        command: logout
+        containerRegistry: 'Azure Container Registry'
+
 
